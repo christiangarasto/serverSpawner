@@ -4,66 +4,68 @@ const { okDto } = require("./response-dto");
 const { attachCookiesToResponse } = require("../utils");
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  console.log("login");
 
-  if (!email || !password) {
-    throw new CustomError.BadRequestError("Please provide email and password");
-  }
-  const user = await User.findOne({ email });
+  // const { email, password } = req.body;
 
-  if (!user) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials");
-  }
-  const isPasswordCorrect = await user.comparePassword(password);
+  // if (!email || !password) {
+  //   throw new CustomError.BadRequestError("Please provide email and password");
+  // }
+  // const user = await User.findOne({ email });
 
-  if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials");
-  }
-  if (!user.isVerified) {
-    throw new CustomError.UnauthenticatedError("Please verify your email");
-  }
-  const tokenUser = createTokenUser(user);
+  // if (!user) {
+  //   throw new CustomError.UnauthenticatedError("Invalid Credentials");
+  // }
+  // const isPasswordCorrect = await user.comparePassword(password);
 
-  // create refresh token
-  let refreshToken = "";
-  // check for existing token
-  const existingToken = await Token.findOne({ user: user._id });
+  // if (!isPasswordCorrect) {
+  //   throw new CustomError.UnauthenticatedError("Invalid Credentials");
+  // }
+  // if (!user.isVerified) {
+  //   throw new CustomError.UnauthenticatedError("Please verify your email");
+  // }
+  // const tokenUser = createTokenUser(user);
 
-  if (existingToken) {
-    const { isValid } = existingToken;
-    if (!isValid) {
-      throw new CustomError.UnauthenticatedError("Invalid Credentials");
-    }
-    refreshToken = existingToken.refreshToken;
-    attachCookiesToResponse({ res, user: tokenUser, refreshToken });
-    res.status(StatusCodes.OK).json({ user: tokenUser });
-    return;
-  }
+  // // create refresh token
+  // let refreshToken = "";
+  // // check for existing token
+  // const existingToken = await Token.findOne({ user: user._id });
 
-  refreshToken = crypto.randomBytes(40).toString("hex");
-  const userAgent = req.headers["user-agent"];
-  const ip = req.ip;
-  const userToken = { refreshToken, ip, userAgent, user: user._id };
+  // if (existingToken) {
+  //   const { isValid } = existingToken;
+  //   if (!isValid) {
+  //     throw new CustomError.UnauthenticatedError("Invalid Credentials");
+  //   }
+  //   refreshToken = existingToken.refreshToken;
+  //   attachCookiesToResponse({ res, user: tokenUser, refreshToken });
+  //   res.status(StatusCodes.OK).json({ user: tokenUser });
+  //   return;
+  // }
 
-  await Token.create(userToken);
+  // refreshToken = crypto.randomBytes(40).toString("hex");
+  // const userAgent = req.headers["user-agent"];
+  // const ip = req.ip;
+  // const userToken = { refreshToken, ip, userAgent, user: user._id };
 
-  attachCookiesToResponse({ res, user: tokenUser, refreshToken });
+  // await Token.create(userToken);
 
-  okDto(tokenUser);
+  // attachCookiesToResponse({ res, user: tokenUser, refreshToken });
+
+  okDto(res, "login");
 };
 
 const logout = async (req, res) => {
-  await Token.findOneAndDelete({ user: req.user.userId });
+  // await Token.findOneAndDelete({ user: req.user.userId });
 
-  res.cookie("accessToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.cookie("refreshToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  okDto();
+  // res.cookie("accessToken", "logout", {
+  //   httpOnly: true,
+  //   expires: new Date(Date.now()),
+  // });
+  // res.cookie("refreshToken", "logout", {
+  //   httpOnly: true,
+  //   expires: new Date(Date.now()),
+  // });
+  okDto(res, "logout");
 };
 
 module.exports = {

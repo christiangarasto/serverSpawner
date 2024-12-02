@@ -1,0 +1,7 @@
+::1 -  [02/Dec/2024:15:50:01 +0000]  "POST /authPath/login HTTP/1.1" 404 20 "undefined" "PostmanRuntime/7.43.0"
+::1 -  [02/Dec/2024:15:50:30 +0000]  "POST /auth/login HTTP/1.1" 404 20 "undefined" "PostmanRuntime/7.43.0"
+::1 -  [02/Dec/2024:15:50:42 +0000]  "POST /auth/login HTTP/1.1" 404 20 "undefined" "PostmanRuntime/7.43.0"
+::1 -  [02/Dec/2024:15:51:06 +0000]  "POST /auth/login HTTP/1.1" 404 20 "undefined" "PostmanRuntime/7.43.0"
+::1 -  [02/Dec/2024:15:51:25 +0000]  "POST /api/v1/auth/login HTTP/1.1" 500 38 "undefined" "PostmanRuntime/7.43.0"
+::1 -  [02/Dec/2024:15:51:44 +0000]  "POST /api/v1/auth/login HTTP/1.1" 200 50 "undefined" "PostmanRuntime/7.43.0"
+::1 -  [02/Dec/2024:15:52:12 +0000]  "GET /api/v1/auth/logout HTTP/1.1" 401 32 "undefined" "PostmanRuntime/7.43.0"

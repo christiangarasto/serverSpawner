@@ -4,8 +4,7 @@ require("dotenv").config();
 // configuration
 const HTTP_DOMAIN = process.env.HTTP_DOMAIN || "http://localhost";
 const HTTP_PORT = process.env.HTTP_PORT || 5000;
-const MONGO_URL = process.env.MONGO_URL;
-console.log("url", url);
+const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // express async-errors
@@ -55,8 +54,12 @@ app.use(logger);
 app.use(express.json());
 app.use(cookieParser(JWT_SECRET));
 
+// define path
+const authPath = "/api/v1/auth";
+console.log("authPath", `${HTTP_DOMAIN}:${HTTP_PORT}/auth`);
+
 // define routes
-app.use("/api/v1/auth", authRouter);
+app.use(authPath, authRouter);
 
 // define errors middleware
 app.use(notFoundError);
@@ -65,7 +68,7 @@ app.use(errorHandlerMiddleware);
 // create server
 const start = async () => {
   try {
-    await connectDB(MONGO_URL);
+    await connectDB(MONGO_URI);
     app.listen(HTTP_PORT, () =>
       console.log(`Server is listening on domain: ${HTTP_DOMAIN}:${HTTP_PORT}`)
     );
