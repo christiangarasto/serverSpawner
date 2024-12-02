@@ -56,7 +56,6 @@ app.use(cookieParser(JWT_SECRET));
 
 // define path
 const authPath = "/api/v1/auth";
-console.log("authPath", `${HTTP_DOMAIN}:${HTTP_PORT}/auth`);
 
 // define routes
 app.use(authPath, authRouter);
@@ -69,9 +68,10 @@ app.use(errorHandlerMiddleware);
 const start = async () => {
   try {
     await connectDB(MONGO_URI);
-    app.listen(HTTP_PORT, () =>
-      console.log(`Server is listening on domain: ${HTTP_DOMAIN}:${HTTP_PORT}`)
-    );
+    app.listen(HTTP_PORT, () => {
+      console.log(`Server is listening on domain: ${HTTP_DOMAIN}:${HTTP_PORT}`);
+      console.log("authPath", `${HTTP_DOMAIN}:${HTTP_PORT}${authPath}`);
+    });
   } catch (error) {
     console.error(error);
   }
