@@ -1,9 +1,45 @@
-const bcrypt = require("bcryptjs");
+const { exec } = require("child_process");
 
-const showPasswordHashed = async () => {
-  const salt = await bcrypt.genSalt(10);
-  const password = await bcrypt.hash("SSGuest_2024", salt);
-  console.log(password);
-};
+exec("sc query", (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Errore nell'esecuzione del comando: ${error.message}`);
+    return;
+  }
 
-showPasswordHashed();
+  if (stderr) {
+    console.error(`Errore: ${stderr}`);
+    return;
+  }
+
+  // Processa l'output
+  const services = parseServices(stdout);
+  console.log("Servizi attivi:", services);
+});
+
+function parseServices(output) {
+  const services = [];
+  const lines = output.split("\n");
+
+  let currentService = null;
+  lines.forEach((line) => {
+    if (line.startsWith("SERVICE_NAME:")) {
+      if (currentService) {
+        services.push(currentService);
+      }
+      currentService = { name: line.split(": ")[1] };
+    } else if (line.startsWith("        STATE")) {
+      if (currentService) {
+        const stateMatch = line.match(/STATE\s*:\s*\d+\s*(\w+)/);
+        if (stateMatch) {
+          currentService.state = stateMatch[1];
+        }
+      }
+    }
+  });
+
+  if (currentService) {
+    services.push(currentService);
+  }
+
+  return services;
+}
