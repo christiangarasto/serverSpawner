@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const CustomError = require("../errors");
 const { okDto } = require("./response-dto");
-const { attachCookiesToResponse, createTokenUser } = require("../utils");
+const { createTokenUser, attachCookiesToResponse } = require("../utils");
 
 const login = async (req, res) => {
   const { username, password } = req.body;
@@ -20,24 +20,31 @@ const login = async (req, res) => {
     throw new CustomError.UnauthenticatedError("Invalid Credentials");
   }
   const tokenUser = createTokenUser(user);
-
   attachCookiesToResponse({ res, user: tokenUser });
 
-  okDto(res, tokenUser);
+  okDto(res, { user: tokenUser });
 };
 
 const logout = async (req, res) => {
-  res.cookie("token", "logout", {
+  // Rimuovi il cookie dal client
+  res.clearCookie("authToken", {
     httpOnly: true,
-    expires: new Date(Date.now()),
+    secure: process.env.NODE_ENV === "production", // Solo in produzione usa secure
+    signed: true, // Se stai usando cookie firmati
   });
 
-  okDto(res, "logout");
+  // Invia una risposta di successo
+  okDto({ message: "Logged out successfully" });
+};
+
+const me = async (req, res) => {
+  const tokenUser = req.user;
+
+  okDto(res, { user: tokenUser });
 };
 
 module.exports = {
   login,
   logout,
+  me,
 };
-
-module.exports = { login, logout };

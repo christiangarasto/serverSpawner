@@ -46,7 +46,12 @@ app.use(
   })
 );
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://192.168.1.28:4200", // Aggiungi il dominio del tuo frontend
+    credentials: true, // Permetti l'invio dei cookie
+  })
+);
 app.use(xss());
 app.use(mongoSanitize());
 

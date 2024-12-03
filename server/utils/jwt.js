@@ -12,11 +12,14 @@ const attachCookiesToResponse = ({ res, user }) => {
 
   const oneDay = 1000 * 60 * 60 * 24;
 
-  res.cookie("token", tokenJWT, {
+  res.cookie("authToken", tokenJWT, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     signed: true,
     expires: new Date(Date.now() + oneDay * process.env.JWT_LIFETIME),
+    domain: "192.168.1.28",
+    port: "4200",
+    path: "/",
   });
 };
 

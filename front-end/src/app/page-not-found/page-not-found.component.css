@@ -1,0 +1,16 @@
+.container {
+  text-align: center;
+  color: #333;
+}
+
+h1 {
+  font-size: 6rem;
+}
+
+.lead {
+  font-size: 1.25rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+}
